@@ -1,13 +1,14 @@
 BOOKS=alice christmas_carol dracula frankenstein heart_of_darkness life_of_bee moby_dick modest_propsal pride_and_prejudice tale_of_two_cities ulysses
 
 FREQLISTS=$(BOOKS:%=results/%.freq.txt)
+PARSEDBOOKS=$(BOOKS:%=results/%.parsed.txt)
 SENTEDBOOKS=$(BOOKS:%=results/%.sent.txt)
 ALL_NO_MD=$(BOOKS:%=data/%.no_md.txt)
 ALL_DATA=data/all.no_md.txt
 ALL_FREQ=results/all.freq.txt
 ALL_SENT=results/all.sent.txt
 
-all: $(FREQLISTS) $(SENTEDBOOKS) $(ALL_DATA) $(ALL_NO_MD) $(ALL_SENT) $(ALL_FREQ)
+all: $(FREQLISTS) $(SENTEDBOOKS) $(PARSEDBOOKS) $(ALL_DATA) $(ALL_NO_MD) $(ALL_SENT) $(ALL_FREQ)
 
 clean:
 	rm -f results/* data/*no_md.txt
@@ -23,3 +24,6 @@ results/%.sent.txt: data/%.no_md.txt
 
 data/all.no_md.txt : $(ALL_NO_MD)
 	cat $^ > $@
+
+results/%.parsed.txt: results/%.sent.txt
+	/usr/local/bin/python3 src/parse.py $< $@
